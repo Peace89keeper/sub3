@@ -1,0 +1,34 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Hero from "./documents/Hero.jsx";
+import SchemeMatchAbout from "./documents/SchemeMatchAbout.jsx";
+import SchemeMatchProfile from "./documents/SchemeMatchProfile.jsx";
+import SchemeMatchDashboard from "./documents/SchemeMatchDashboard.jsx";
+import SchemeMatchDetail from "./documents/SchemeMatchDetail.jsx";
+import SchemeMatchNotifications from "./documents/SchemeMatchNotifications.jsx";
+
+import Login from "./documents/Login.jsx";
+import Register from "./documents/Resgister.jsx";
+
+const App = () => {
+  return (
+    <>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Hero />} />
+        <Route path="/about" element={<SchemeMatchAbout />} />
+        <Route path="/profile" element={<SchemeMatchProfile />} />
+        <Route path="/dashboard" element={<SchemeMatchDashboard />} />
+        <Route path="/detail" element={<SchemeMatchDetail />} />
+        <Route path="/notifications" element={<SchemeMatchNotifications />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
+    
+      
+    </>
+  );
+};
+
+export default App;

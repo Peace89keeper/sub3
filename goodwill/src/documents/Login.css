@@ -1,0 +1,131 @@
+/* Global Reset to prevent margin bugs */
+html, body, #root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0d0e12; 
+  overflow-x: hidden; 
+}
+
+/* Core Variables */
+:root {
+  --sm-bg: #0d0e12;
+  --sm-surface: #1a1b23;
+  --sm-accent: #ea580c;
+  --sm-accent-hover: #c2410c;
+  --sm-text-main: #ffffff;
+  --sm-text-muted: #9ca3af;
+  --sm-border: #374151;
+  --sm-error: #ef4444;
+  --sm-font: 'Inter', system-ui, sans-serif;
+}
+
+/* Page Setup */
+.sm-login-container {
+  background-color: var(--sm-bg);
+  color: var(--sm-text-main);
+  font-family: var(--sm-font);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Minimal Nav */
+.sm-login-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sm-logo-group { display: flex; align-items: center; gap: 1rem; }
+.sm-logo-icon {
+  width: 40px; height: 40px; background-color: var(--sm-accent);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1.2rem;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
+}
+.sm-logo-text { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px; }
+
+.sm-btn-text {
+  background: none; border: none; color: var(--sm-text-muted);
+  font-weight: 600; cursor: pointer; transition: color 0.2s;
+}
+.sm-btn-text:hover { color: var(--sm-text-main); }
+
+/* Main Layout */
+.sm-login-main {
+  flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem;
+}
+
+.sm-login-wrapper {
+  width: 100%; max-width: 450px;
+  background-color: var(--sm-surface);
+  border: 1px solid var(--sm-border);
+  border-radius: 16px; padding: 3rem;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+}
+
+/* Header & Errors */
+.sm-login-header { margin-bottom: 2rem; text-align: center; }
+.sm-login-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.sm-login-subtitle { color: var(--sm-text-muted); font-size: 0.9rem; line-height: 1.5; }
+
+.sm-error-message {
+  background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--sm-error); padding: 0.75rem; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600; text-align: center; margin-bottom: 1.5rem;
+}
+
+/* Form Layout & Inputs */
+.sm-form { display: flex; flex-direction: column; gap: 1.5rem; }
+.sm-input-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.sm-label-row { display: flex; justify-content: space-between; align-items: center; }
+
+.sm-input-group label { font-size: 0.85rem; font-weight: 600; color: var(--sm-text-muted); }
+.sm-forgot-password { font-size: 0.75rem; color: var(--sm-accent); cursor: pointer; font-weight: 600; }
+.sm-forgot-password:hover { text-decoration: underline; }
+
+.sm-input-group input {
+  background-color: #111217; border: 1px solid var(--sm-border);
+  color: var(--sm-text-main); padding: 0.9rem 1rem; border-radius: 8px;
+  font-family: inherit; font-size: 0.95rem; transition: all 0.2s ease;
+}
+.sm-input-group input:focus {
+  outline: none; border-color: var(--sm-accent); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.2);
+}
+.sm-input-group input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Password Wrapper Logic */
+.sm-password-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+.sm-password-wrapper input { width: 100%; padding-right: 3rem; }
+
+.sm-password-toggle {
+  position: absolute; right: 0.75rem;
+  background: none; border: none; color: var(--sm-text-muted);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  padding: 0.25rem; transition: color 0.2s ease;
+}
+.sm-password-toggle:hover { color: var(--sm-text-main); }
+.sm-password-toggle svg { width: 1.25rem; height: 1.25rem; }
+
+/* Submit Button & Footer */
+.sm-btn-submit {
+  background-color: var(--sm-accent); color: var(--sm-text-main);
+  border: none; padding: 1.1rem; border-radius: 8px;
+  font-weight: 700; font-size: 1.05rem; cursor: pointer;
+  margin-top: 0.5rem; transition: background-color 0.2s;
+}
+.sm-btn-submit:hover:not(:disabled) { background-color: var(--sm-accent-hover); }
+.sm-btn-submit:disabled { opacity: 0.7; cursor: wait; }
+
+.sm-login-footer { margin-top: 2rem; text-align: center; font-size: 0.85rem; color: var(--sm-text-muted); }
+.sm-link-highlight { color: var(--sm-accent); font-weight: 600; cursor: pointer; margin-left: 0.25rem; }
+.sm-link-highlight:hover { text-decoration: underline; }
+
+@media (max-width: 600px) {
+  .sm-login-wrapper { padding: 2rem; }
+  .sm-login-nav { padding: 1rem 2rem; }
+}
