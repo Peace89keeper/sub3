@@ -1,157 +1,130 @@
-import React, { useState } from 'react';
- // Import the hook for navigation
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './SchemeMatchDashboard.css';
-import Navbar from '../components/Navbar.jsx'; // Import the Navbar component
+import Navbar from '../components/Navbar.jsx';
 
 const SchemeMatchDashboard = () => {
+  const [displaySchemes, setDisplaySchemes] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Initialize the router
+  // 1. Fetch User Data & Scheme Data on Load
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        // Fetch Schemes
+        const schemeRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/schemes/all`);
+        const schemeData = await schemeRes.json();
+        
+        if (schemeData.success) {
+          const sorted = schemeData.schemes.sort((a, b) => b.impactScore - a.impactScore);
+          setDisplaySchemes(sorted);
+        }
 
-  // THE LOGOUT LOGIC
+        // Fetch Current Logged-In User Profile
+        const userRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/me`, {
+          method: "GET",
+          credentials: "true", // CRITICAL for passing the auth cookie
+        });
+        const userData = await userRes.json();
+        
+        if (userData.success) {
+          setCurrentUser(userData.user);
+        }
+      } catch (error) {
+        console.error("Dashboard Load Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchDashboardData();
+  }, []);
 
-  // Simulated data: This will eventually come from your Express backend / MongoDB
-  const [schemes] = useState([
-    {
-      id: '',
-      title: 'PM Vishwakarma Yojana',
-      ministry: 'Ministry of Micro, Small & Medium Enterprises',
-      benefit: 'Up to ₹15,000 toolkits + training stipend',
-      deadline: '31 May 2026',
-      daysLeft: 66,
-      impactScore: 84,
-      isNew: true,
-      matchReason: 'Matches: Artisan / OBC / Maharashtra'
-    },
-    {
-      id: 'SM-089',
-      title: 'Post Matric Scholarship Scheme',
-      ministry: 'Ministry of Social Justice',
-      benefit: 'Full academic allowance + maintenance',
-      deadline: '15 Apr 2026',
-      daysLeft: 20,
-      impactScore: 92,
-      isNew: false,
-      matchReason: 'Matches: Student / SC / Income < 2.5L'
-    },
-    {
-      id: 'SM-211',
-      title: 'Stand Up India Scheme',
-      ministry: 'Department of Financial Services',
-      benefit: 'Bank loans between ₹10 Lakh and ₹1 Crore',
-      deadline: 'Rolling',
-      daysLeft: null,
-      impactScore: 65,
-      isNew: false,
-      matchReason: 'Matches: Category / Age bracket'
-    },
-    {
-      id: 'SM-21139',
-      title: 'Stand Up India Scheme all',
-      ministry: 'Department of Financial Services',
-      benefit: 'Bank loans between ₹10 Lakh and ₹1 Crore',
-      deadline: 'Rolling',
-      daysLeft: null,
-      impactScore: 64,
-      isNew: false,
-      matchReason: 'Matches: Category / Age bracket'
-    },
-    {
-      id: 'SM-211',
-      title: 'Stand Up India Scheme none',
-      ministry: 'Department of Financial Services',
-      benefit: 'Bank loans between ₹10 Lakh and ₹1 Crore',
-      deadline: 'Rolling',
-      daysLeft: 20,
-      impactScore: 69,
-      isNew: false,
-      matchReason: 'Matches: Category / Age bracket'
+  // 2. AI Filter Button Logic
+  const handleAnalyzeClick = async () => {
+    if (!currentUser) {
+      alert("No user profile found. Please register or log in first.");
+      return;
     }
-  ]);
 
-  // Logic: Always sort schemes by highest impact score first
-  const rankedSchemes = [...schemes].sort((a, b) => b.impactScore - a.impactScore);
+    setIsAnalyzing(true);
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/schemes/analyze`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userProfile: currentUser }), // Sending REAL data to AI
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setDisplaySchemes(data.matchedSchemes);
+      } else {
+        console.error("AI Filtering Failed:", data.message);
+      }
+    } catch (error) {
+      console.error("Network Error during AI analysis:", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  if (loading) return <div>Loading Dashboard Data...</div>;
 
   return (
     <div className="sm-dash-container">
-      {/* Dashboard Nav */}
       <Navbar/>
-
       <main className="sm-dash-main">
-        {/* Top Profile Summary Bar */}
+        {/* Top Section */}
         <section className="sm-profile-summary">
           <div className="sm-summary-content">
-            <h1 className="sm-dash-title">Your AI Welfare Matches</h1>
-            <p className="sm-dash-subtitle">Gemini evaluated 2,500+ schemes against your profile. Here are your top recommendations.</p>
+            <h1 className="sm-dash-title">
+              {currentUser ? `Welcome back, ${currentUser.name || 'User'}` : "Your AI Welfare Matches"}
+            </h1>
+            <button 
+              onClick={handleAnalyzeClick} 
+              disabled={isAnalyzing}
+              className="sm-btn-apply"
+              style={{ marginTop: '10px' }}
+            >
+              {isAnalyzing ? "Gemini is Analyzing..." : "Run AI Filter"}
+            </button>
+            <button 
+              
+              className="sm-btn-apply"
+              style={{ marginTop: '10px' }}
+            ><Link to="/admin/add-scheme">Add Informations to AI Filter</Link>
+            </button>
           </div>
           <div className="sm-stats-group">
-            <div className="sm-stat-box">
+             <div className="sm-stat-box">
               <span className="sm-stat-label">Total Matches</span>
-              <span className="sm-stat-value">{rankedSchemes.length}</span>
-            </div>
-            <div className="sm-stat-box">
-              <span className="sm-stat-label">Avg. Impact</span>
-              <span className="sm-stat-value sm-text-accent">
-                {Math.round(rankedSchemes.reduce((acc, curr) => acc + curr.impactScore, 0) / rankedSchemes.length)}
-              </span>
+              <span className="sm-stat-value">{displaySchemes.length}</span>
             </div>
           </div>
         </section>
 
-        {/* Scheme Cards Grid */}
+        {/* Dynamic Scheme Grid */}
         <section className="sm-scheme-grid">
-          {rankedSchemes.map((scheme) => (
-            <div key={scheme.id} className="sm-scheme-card">
-              
-              {/* Card Header: Tags & Ministry */}
-              <div className="sm-card-header">
-                <div className="sm-tag-group">
-                  {scheme.isNew && <span className="sm-badge sm-badge-new">Newly Launched</span>}
-                  {scheme.daysLeft && scheme.daysLeft <= 30 ? (
-                    <span className="sm-badge sm-badge-urgent">Urgent: {scheme.daysLeft} days left</span>
-                  ) : scheme.daysLeft ? (
-                    <span className="sm-badge sm-badge-standard">Deadline: {scheme.deadline}</span>
-                  ) : (
-                    <span className="sm-badge sm-badge-standard">Rolling Deadline</span>
-                  )}
-                </div>
-                <span className="sm-ministry-text">{scheme.ministry}</span>
+          {displaySchemes.length === 0 ? (
+            <p>No schemes found in the database.</p>
+          ) : (
+            displaySchemes.map((scheme) => (
+              <div key={scheme._id || scheme.customId} className="sm-scheme-card">
+                 <div className="sm-card-body">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h2 className="sm-scheme-title">{scheme.title}</h2>
+                      {scheme.isNewlyLaunched && <span className="sm-badge" style={{ backgroundColor: 'green', color: 'white', padding: '4px', borderRadius: '4px' }}>New</span>}
+                    </div>
+                    <p><strong>Ministry:</strong> {scheme.ministry}</p>
+                    <p><strong>Benefit:</strong> {scheme.benefit}</p>
+                 </div>
               </div>
-
-              {/* Card Body: Title & Benefit */}
-              <div className="sm-card-body">
-                <h2 className="sm-scheme-title">{scheme.title}</h2>
-                <div className="sm-benefit-box">
-                  <span className="sm-benefit-label">Estimated Benefit:</span>
-                  <span className="sm-benefit-value">{scheme.benefit}</span>
-                </div>
-              </div>
-
-              {/* Card Footer: Impact Score & CTA */}
-              <div className="sm-card-footer">
-                <div className="sm-score-section">
-                  <div className="sm-score-header">
-                    <span className="sm-score-label">Personal Impact Score</span>
-                    <span className="sm-score-number">{scheme.impactScore}/100</span>
-                  </div>
-                  <div className="sm-progress-track">
-                    {/* Logic: Inline style handles the dynamic width of the bar */}
-                    <div 
-                      className="sm-progress-fill" 
-                      style={{ width: `${scheme.impactScore}%` }}
-                    ></div>
-                  </div>
-                  <p className="sm-match-reason">{scheme.matchReason}</p>
-                </div>
-                
-                <button className="sm-btn-apply">
-                  <Link to={`/detail/${scheme.id}`}>Apply via MyScheme</Link>
-                  <span className="sm-arrow">↗</span>
-                </button>
-              </div>
-
-            </div>
-          ))}
+            ))
+          )}
         </section>
       </main>
     </div>

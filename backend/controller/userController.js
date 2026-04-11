@@ -73,3 +73,18 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
+
+// FETCH CURRENT USER LOGIC
+export const getUserProfile = async (req, res, next) => {
+  try {
+    // Because they are logged in, your auth middleware should have attached the user to req.user
+    const user = await User.findById(req.user._id);
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

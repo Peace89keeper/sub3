@@ -16,8 +16,12 @@ export const errorMiddleware = (err, req, res, next) => {
 
 
   if (err.name === 'ValidationError') {
-    const validationErrors = Object.values(error.errors).map(err => err.message);
-    return next(new ErrorHandler(validationErrors.join(', '), 400));
+    // 1. Fix the typo: Use 'err.errors' instead of 'error.errors'
+    // 2. Change the map variable to 'valError' to avoid confusing the outer 'err'
+    const validationErrors = Object.values(err.errors).map(valError => valError.message);
+    
+    // 3. Update the main err object so the return statement at the bottom handles it
+    err = new ErrorHandler(validationErrors.join(', '), 400);
   }
 
 

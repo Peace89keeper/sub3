@@ -6,6 +6,7 @@ import SchemeMatchProfile from "./documents/SchemeMatchProfile.jsx";
 import SchemeMatchDashboard from "./documents/SchemeMatchDashboard.jsx";
 import SchemeMatchDetail from "./documents/SchemeMatchDetail.jsx";
 import SchemeMatchNotifications from "./documents/SchemeMatchNotifications.jsx";
+import AddScheme from './documents/AddScheme.jsx';
 
 import Login from "./documents/Login.jsx";
 import Register from "./documents/Resgister.jsx";
@@ -16,6 +17,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Hero />} />
+        <Route path="/admin/add-scheme" element={<AddScheme />} />
         <Route path="/about" element={<SchemeMatchAbout />} />
         <Route path="/profile" element={<SchemeMatchProfile />} />
         <Route path="/dashboard" element={<SchemeMatchDashboard />} />

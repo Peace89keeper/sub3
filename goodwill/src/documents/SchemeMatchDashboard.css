@@ -321,3 +321,49 @@
   .sm-dash-nav { padding: 1rem 2rem; }
   .sm-dash-title { font-size: 2rem; }
 }
+
+/* Core Wrapper Logic */
+.igt-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #121212;
+  color: #e0e0e0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Internal Card/Element Logic */
+.igt-element {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Interaction Logic */
+.igt-element:hover {
+  transform: translateY(-4px);
+  border-color: #555;
+}
+
+/* Text Styling Logic */
+.igt-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.igt-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #aaaaaa;
+}
