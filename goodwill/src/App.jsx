@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Analytics } from '@vercel/analytics/react';
 import Hero from "./documents/Hero.jsx";
 import SchemeMatchAbout from "./documents/SchemeMatchAbout.jsx";
 import SchemeMatchProfile from "./documents/SchemeMatchProfile.jsx";
@@ -27,8 +28,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
-    
-      
+    <Analytics />
     </>
   );
 };
